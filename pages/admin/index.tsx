@@ -8,10 +8,12 @@ import { useRouter } from 'next/router';
 import SideBar from 'components/SideBar';
 import DetailCard from 'components/DetailCard';
 import Switch from 'react-switch';
+import formatUserType from 'helpers/formatUserType';
 
 const AdminPage: NextPage = () => {
 	const votingContext = useContext(VotingContext);
-	const [checked, setChecked] = useState<boolean>(false);
+	const [loading1, setLoading1] = useState<boolean>(false);
+	const [loading2, setLoading2] = useState<boolean>(false);
 
 	const {
 		connectWallet,
@@ -28,15 +30,20 @@ const AdminPage: NextPage = () => {
 		contract,
 		contestants,
 		users,
+		isVotingEnabled,
+		isVoteVisible,
+		enableVoting,
+		disableVoting,
+		showVotes,
+		hideVotes,
+		user,
+		isVoteEnabled,
+		isVoteVisble,
 	} = votingContext;
 	const router = useRouter();
 
 	const reconnectWallet = async () => {
 		await connectWallet(router);
-	};
-
-	const getContestants = async (contract: any) => {
-		const contestants = await contract.methods.getContestants().call();
 	};
 
 	//Reconnect wallet on page refresh
@@ -80,11 +87,24 @@ const AdminPage: NextPage = () => {
 		//eslint-disable-next-line
 	}, [error]);
 
+	useEffect(() => {
+		let mounted = true;
+
+		if (mounted && contract !== null) {
+			isVoteEnabled(contract);
+			isVoteVisble(contract);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [contract]);
+
 	//Fetch users
 	useEffect(() => {
 		let mounted = true;
 		if (mounted && address !== null && contract !== null) {
-			fetchUsers(contract);
+			fetchUsers(contract, address);
 		}
 		return () => {
 			mounted = false;
@@ -104,8 +124,52 @@ const AdminPage: NextPage = () => {
 		//eslint-disable-next-line
 	}, [address, contract]);
 
-	const handleChange = () => {
-		setChecked(!checked);
+	const handleVotes = async () => {
+		if (isVotingEnabled) {
+			try {
+				setLoading1(true);
+				await disableVoting(contract, address);
+				toast.success('Voting disabled');
+				setLoading1(false);
+			} catch (error) {
+				toast.error('An error occurred');
+				setLoading1(false);
+			}
+		} else {
+			try {
+				setLoading1(true);
+				await enableVoting(contract, address);
+				toast.success('Voting enabled');
+				setLoading1(false);
+			} catch (error) {
+				toast.error('An error occurred');
+				setLoading1(false);
+			}
+		}
+	};
+	const handleVotesVisiblity = async () => {
+		const type = formatUserType(user.userType);
+		if (isVoteVisible) {
+			try {
+				setLoading2(true);
+				await hideVotes(contract, address, type);
+				toast.success('Votes are now hidden');
+				setLoading2(false);
+			} catch (error) {
+				toast.error('An error occurred');
+				setLoading2(false);
+			}
+		} else {
+			try {
+				setLoading2(true);
+				await showVotes(contract, address, type);
+				toast.success('Votes are now visible');
+				setLoading2(false);
+			} catch (error) {
+				toast.error('An error occurred');
+				setLoading2(false);
+			}
+		}
 	};
 	return (
 		<div>
@@ -137,22 +201,23 @@ const AdminPage: NextPage = () => {
 					</button>
 				</div>
 				<div className=' grid grid-cols-1 md:grid-cols-3 gap-8 w-4/6 ml-32 absolute top-32 left-[300px]'>
-					<DetailCard
-						name='Contestants'
-						icon='ImUsers'
-						count={contestants}
-					/>
+					<DetailCard name='Contestants' icon='ImUsers' count={contestants} />
 					<DetailCard name='Users' icon='FaUsers' count={users} />
 					<DetailCard name='Votes' />
 				</div>
 				<div className='absolute top-[350px] left-[400px]'>
 					<label className='flex items-center'>
 						<span className='mr-4'>Enable / Disable voting</span>
-						<Switch onChange={() => handleChange()} checked={checked} />
+						<Switch onChange={() => handleVotes()} checked={isVotingEnabled} />
+						{loading1 && <p className='ml-2'>please wait...</p>}
 					</label>
 					<label className='flex items-center mt-8'>
 						<span className='mr-4'>Show votes</span>
-						<Switch onChange={() => handleChange()} checked={checked} />
+						<Switch
+							onChange={() => handleVotesVisiblity()}
+							checked={isVoteVisible}
+						/>
+						{loading2 && <p className='ml-2'>please wait...</p>}
 					</label>
 				</div>
 			</main>

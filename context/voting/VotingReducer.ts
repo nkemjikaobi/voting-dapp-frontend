@@ -7,6 +7,8 @@ import {
 	LOAD_CONTRACT,
 	FETCH_CONTESTANTS,
 	FETCH_USERS,
+	IS_VOTING_ENABLED,
+	IS_VOTING_VISIBLE,
 } from '../types';
 
 const VotingReducer = (state: any, action: any) => {
@@ -29,6 +31,17 @@ const VotingReducer = (state: any, action: any) => {
 				contract: action.payload,
 			};
 
+		case IS_VOTING_VISIBLE:
+			return {
+				...state,
+				isVoteVisible: action.payload,
+			};
+		case IS_VOTING_ENABLED:
+			return {
+				...state,
+				isVotingEnabled: action.payload,
+			};
+
 		case FETCH_CONTESTANTS:
 			return {
 				...state,
@@ -37,7 +50,8 @@ const VotingReducer = (state: any, action: any) => {
 		case FETCH_USERS:
 			return {
 				...state,
-				users: action.payload,
+				users: action.payload.users,
+				user: action.payload.user[0],
 			};
 
 		case DISCONNECT_WALLET:

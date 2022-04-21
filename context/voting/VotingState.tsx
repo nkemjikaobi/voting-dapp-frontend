@@ -10,13 +10,14 @@ import {
 	LOAD_CONTRACT,
 	FETCH_CONTESTANTS,
 	FETCH_USERS,
+	IS_VOTING_ENABLED,
+	IS_VOTING_VISIBLE,
 } from '../types';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import VotingJson from 'artifacts/voting.json';
 import convertToEther from 'helpers/convertToEther';
-import { constants } from 'buffer';
 
 const VotingState = (props: any) => {
 	const initialState = {
@@ -33,6 +34,9 @@ const VotingState = (props: any) => {
 		isChairman: false,
 		users: [],
 		contestants: [],
+		isVotingEnabled: true,
+		isVoteVisible: false,
+		user: null,
 	};
 
 	const [state, dispatch] = useReducer(VotingReducer, initialState);
@@ -135,7 +139,16 @@ const VotingState = (props: any) => {
 	//fetch contestants
 	const fetchContestants = async (contract: any) => {
 		try {
-			const contestants = await contract.methods.getContestants().call();
+			const res = await contract.methods.getContestants().call();
+			let contestants: any = [];
+			res.map((dat: any) => {
+				let item: any = {};
+				item.id = dat.id;
+				item.name = dat.name;
+				item.numberOfVotes = dat.numberOfVotes;
+				item.hasWon = dat.hasWon;
+				contestants.push(item);
+			});
 			dispatch({
 				type: FETCH_CONTESTANTS,
 				payload: contestants,
@@ -149,13 +162,115 @@ const VotingState = (props: any) => {
 	};
 
 	//fetch users
-	const fetchUsers = async (contract: any) => {
+	const fetchUsers = async (contract: any, address: any) => {
 		try {
-			const users = await contract.methods.getUsers().call();
+			const res = await contract.methods.getUsers().call();
+			let users: any = [];
+			res.map((dat: any) => {
+				let item: any = {};
+				item.userId = dat.userId;
+				item.userAddress = dat.userAddress;
+				item.userType = dat.userType;
+				item.hasVoted = dat.hasVoted;
+				users.push(item);
+			});
+			let user = users.filter((user: any) => user.userAddress === address);
 			dispatch({
 				type: FETCH_USERS,
-				payload: users,
+				payload: { users, user },
 			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	//is vote visible
+	const isVoteVisble = async (contract: any) => {
+		try {
+			const response = await contract.methods.isVotingVisible().call();
+			dispatch({
+				type: IS_VOTING_VISIBLE,
+				payload: response,
+			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	//is vote enabled
+	const isVoteEnabled = async (contract: any) => {
+		try {
+			const response = await contract.methods.isVotingEnabled().call();
+			dispatch({
+				type: IS_VOTING_ENABLED,
+				payload: response,
+			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	//enable voting
+	const enableVoting = async (contract: any, address: string) => {
+		try {
+			await contract.methods.enableVote().send({
+				from: address,
+			});
+			await isVoteEnabled(contract);
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	//disable voting
+	const disableVoting = async (contract: any, address: string) => {
+		try {
+			await contract.methods.disbaleVote().send({
+				from: address,
+			});
+			await isVoteEnabled(contract);
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	//show votes
+	const showVotes = async (contract: any, address: string, userType: any) => {
+		try {
+			await contract.methods.showVotesVisibility(userType).send({
+				from: address,
+			});
+			await isVoteVisble(contract);
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	//hide votes
+	const hideVotes = async (contract: any, address: string, userType: any) => {
+		try {
+			await contract.methods.hideVotesVisibility(userType).send({
+				from: address,
+			});
+			await isVoteVisble(contract);
 		} catch (error) {
 			dispatch({
 				type: ERROR,
@@ -205,6 +320,9 @@ const VotingState = (props: any) => {
 				isChairman: state.isChairman,
 				users: state.users,
 				contestants: state.contestants,
+				isVotingEnabled: state.isVotingEnabled,
+				isVoteVisible: state.isVoteVisible,
+				user: state.user,
 				clearError,
 				connectWallet,
 				disconnectWallet,
@@ -212,6 +330,12 @@ const VotingState = (props: any) => {
 				loadContract,
 				fetchContestants,
 				fetchUsers,
+				isVoteEnabled,
+				isVoteVisble,
+				enableVoting,
+				disableVoting,
+				hideVotes,
+				showVotes,
 			}}
 		>
 			{props.children}
