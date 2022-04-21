@@ -23,7 +23,7 @@ class MyDocument extends Document {
 						rel='stylesheet'
 					></link>
 				</Head>
-				<body className='bg-[#e2e7f6] text-black font-roboto box-border'>
+				<body className='bg-[#D9DFF4] text-black font-roboto box-border'>
 					<Main />
 					<NextScript />
 				</body>
