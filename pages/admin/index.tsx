@@ -5,8 +5,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import VotingContext from 'context/voting/VotingContext';
 import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
-import AdminPanel from 'components/AdminPanel';
+import SideBar from 'components/SideBar';
+import DetailCard from 'components/DetailCard';
 
 const AdminPage: NextPage = () => {
 	const votingContext = useContext(VotingContext);
@@ -78,37 +78,33 @@ const AdminPage: NextPage = () => {
 			<Toaster position='top-right' />
 			<main className='container mx-auto'>
 				<div>
-					<AdminPanel />
+					<SideBar />
 				</div>
-				{/* <div className='mt-8'>
-					<nav className=' flex justify-between items-center'>
-						<Link href='/'>
-							<a href='#' className='text-2xl font-bold'>
-								Voting Dapp
-							</a>
-						</Link>
-						<div className='flex'>
-							<button
-								onClick={() => connectWallet(router)}
-								className='bg-[#4B60B0] mr-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
-							>
-								{balance} ETH |{' '}
-								{address && (
-									<span className='ml-2 text-purple-300'>{`${address.slice(
-										0,
-										3
-									)}...${address.slice(-3)}`}</span>
-								)}
-							</button>
-							<button
-								onClick={() => disconnectWallet(web3Modal, router)}
-								className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
-							>
-								disconnect
-							</button>
-						</div>
-					</nav>
-				</div> */}
+				<div className='flex absolute right-10 mt-8'>
+					<button
+						onClick={() => connectWallet(router)}
+						className='bg-[#4B60B0] mr-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
+					>
+						{balance} ETH |{' '}
+						{address && (
+							<span className='ml-2 text-purple-300'>{`${address.slice(
+								0,
+								3
+							)}...${address.slice(-3)}`}</span>
+						)}
+					</button>
+					<button
+						onClick={() => disconnectWallet(web3Modal, router)}
+						className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
+					>
+						disconnect
+					</button>
+				</div>
+				<div className=' grid grid-cols-1 md:grid-cols-3 gap-8 w-4/6 ml-32 absolute top-32 left-[300px]'>
+					<DetailCard name='Contestants' icon='ImUsers' />
+					<DetailCard name='Users' icon="FaUsers" />
+					<DetailCard name='Votes' />
+				</div>
 			</main>
 		</div>
 	);
