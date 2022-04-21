@@ -105,7 +105,12 @@ const DashboardPage: NextPage = () => {
 							</button>
 						</div>
 					</nav>
-					<div>
+					<div className=' mt-8 grid grid-cols-1 md:grid-cols-3 gap-4'>
+						<VoterCard />
+						<VoterCard />
+						<VoterCard />
+						<VoterCard />
+						<VoterCard />
 						<VoterCard />
 					</div>
 				</div>
