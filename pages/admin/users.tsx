@@ -1,14 +1,14 @@
-import SideBar from 'components/SideBar'
-import React from 'react'
+import SideBar from 'components/SideBar';
+import React from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import VotingContext from 'context/voting/VotingContext';
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-
+import UserList from 'components/UserList';
 
 const UsersPage = () => {
-  const votingContext = useContext(VotingContext);
+	const votingContext = useContext(VotingContext);
 
 	const {
 		connectWallet,
@@ -21,52 +21,52 @@ const UsersPage = () => {
 		web3Modal,
 		disconnectWallet,
 	} = votingContext;
-  const router = useRouter();
-  	const reconnectWallet = async () => {
-			await connectWallet(router, router.pathname);
+	const router = useRouter();
+	const reconnectWallet = async () => {
+		await connectWallet(router, router.pathname);
+	};
+
+	//Reconnect wallet on page refresh
+	useEffect(() => {
+		let mounted = true;
+
+		if (mounted && localStorage?.getItem('isWalletConnected') === 'true') {
+			reconnectWallet();
+		}
+		return () => {
+			mounted = false;
 		};
+		//eslint-disable-next-line
+	}, []);
 
-		//Reconnect wallet on page refresh
-		useEffect(() => {
-			let mounted = true;
+	//Handle Messages
+	useEffect(() => {
+		let mounted = true;
 
-			if (mounted && localStorage?.getItem('isWalletConnected') === 'true') {
-				reconnectWallet();
-			}
-			return () => {
-				mounted = false;
-			};
-			//eslint-disable-next-line
-		}, []);
+		if (mounted && message !== null) {
+			toast.success(message);
+			setTimeout(() => clearMessage(), 3000);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [message]);
 
-		//Handle Messages
-		useEffect(() => {
-			let mounted = true;
+	//Handle Errors
+	useEffect(() => {
+		let mounted = true;
 
-			if (mounted && message !== null) {
-				toast.success(message);
-				setTimeout(() => clearMessage(), 3000);
-			}
-			return () => {
-				mounted = false;
-			};
-			//eslint-disable-next-line
-		}, [message]);
-
-		//Handle Errors
-		useEffect(() => {
-			let mounted = true;
-
-			if (mounted && error !== null) {
-				toast.error(error);
-				setTimeout(() => clearError(), 3000);
-			}
-			return () => {
-				mounted = false;
-			};
-			//eslint-disable-next-line
-		}, [error]);
-  return (
+		if (mounted && error !== null) {
+			toast.error(error);
+			setTimeout(() => clearError(), 3000);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [error]);
+	return (
 		<div>
 			<Head>
 				<title>Admin</title>
@@ -76,9 +76,7 @@ const UsersPage = () => {
 			<Toaster position='top-right' />
 			<SideBar />
 			<div className='flex absolute right-10 mt-8'>
-				<button
-					className='bg-[#4B60B0] mr-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
-				>
+				<button className='bg-[#4B60B0] mr-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'>
 					{balance} ETH |{' '}
 					{address && (
 						<span className='ml-2 text-purple-300'>{`${address.slice(
@@ -94,8 +92,12 @@ const UsersPage = () => {
 					disconnect
 				</button>
 			</div>
+			<h3 className='absolute left-[400px] top-[50px] text-4xl'>Users</h3>
+			<div className='flex absolute left-[400px] top-[100px] mt-8'>
+				<UserList />
+			</div>
 		</div>
 	);
-}
+};
 
-export default UsersPage
+export default UsersPage;
