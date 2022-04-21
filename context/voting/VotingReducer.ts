@@ -4,12 +4,10 @@ import {
 	CLEAR_ERROR,
 	CLEAR_MESSAGE,
 	DISCONNECT_WALLET,
-	MONITOR_ACCOUNT_CHANGED,
-	MONITOR_DISCONNECT,
 	LOAD_CONTRACT,
 } from '../types';
 
-const contactReducer = (state: any, action: any) => {
+const VotingReducer = (state: any, action: any) => {
 	switch (action.type) {
 		case CONNECT_WALLET:
 			return {
@@ -39,21 +37,6 @@ const contactReducer = (state: any, action: any) => {
 				providerOptions: null,
 				provider: null,
 			};
-		case MONITOR_DISCONNECT:
-			return {
-				...state,
-				error: action.payload,
-				isConnected: false,
-				balance: '',
-				address: null,
-			};
-		case MONITOR_ACCOUNT_CHANGED:
-			return {
-				...state,
-				address: null,
-				isConnected: false,
-				balance: '',
-			};
 		case ERROR:
 			return {
 				...state,
@@ -73,4 +56,4 @@ const contactReducer = (state: any, action: any) => {
 			return state;
 	}
 };
-export default contactReducer;
+export default VotingReducer;

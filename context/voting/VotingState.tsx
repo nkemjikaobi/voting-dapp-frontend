@@ -1,14 +1,12 @@
 import React, { useReducer } from 'react';
-import WalletContext from './WalletContext';
-import WalletReducer from './WalletReducer';
+import VotingContext from './VotingContext';
+import VotingReducer from './VotingReducer';
 import {
 	CONNECT_WALLET,
 	ERROR,
 	CLEAR_ERROR,
 	CLEAR_MESSAGE,
 	DISCONNECT_WALLET,
-	MONITOR_ACCOUNT_CHANGED,
-	MONITOR_DISCONNECT,
 	LOAD_CONTRACT,
 } from '../types';
 import Web3 from 'web3';
@@ -17,7 +15,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import VotingJson from 'artifacts/voting.json';
 import convertToEther from 'helpers/convertToEther';
 
-const WalletState = (props: any) => {
+const VotingState = (props: any) => {
 	const initialState = {
 		address: null,
 		isConnected: false,
@@ -34,7 +32,7 @@ const WalletState = (props: any) => {
 		contestants: [],
 	};
 
-	const [state, dispatch] = useReducer(WalletReducer, initialState);
+	const [state, dispatch] = useReducer(VotingReducer, initialState);
 
 	//Connect Wallet
 	const connectWallet = async (router: any) => {
@@ -144,32 +142,8 @@ const WalletState = (props: any) => {
 		router.push('/');
 	};
 
-	//Monitor disconnect
-	const monitorDisconnect = async (provider: any) => {
-		// Subscribe to session disconnection
-		provider.on('disconnect', (code: number, reason: string) => {
-			dispatch({
-				type: MONITOR_DISCONNECT,
-				payload: reason,
-			});
-			localStorage.removeItem('isWalletConnected');
-			localStorage.removeItem('count');
-		});
-	};
-	//Monitor account changed
-	const monitorAccountChanged = async (provider: any) => {
-		// Subscribe to accounts change
-		provider.on('accountsChanged', (accounts: string[]) => {
-			dispatch({
-				type: MONITOR_ACCOUNT_CHANGED,
-			});
-			localStorage.removeItem('isWalletConnected');
-			localStorage.removeItem('count');
-		});
-	};
-
 	return (
-		<WalletContext.Provider
+		<VotingContext.Provider
 			value={{
 				address: state.address,
 				isConnected: state.isConnected,
@@ -188,14 +162,12 @@ const WalletState = (props: any) => {
 				connectWallet,
 				disconnectWallet,
 				clearMessage,
-				monitorAccountChanged,
-				monitorDisconnect,
 				loadContract,
 			}}
 		>
 			{props.children}
-		</WalletContext.Provider>
+		</VotingContext.Provider>
 	);
 };
 
-export default WalletState;
+export default VotingState;
