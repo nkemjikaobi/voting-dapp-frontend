@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import toast, { Toaster } from 'react-hot-toast';
@@ -6,9 +6,10 @@ import VotingContext from 'context/voting/VotingContext';
 import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import AdminPanel from 'components/AdminPanel';
 
 const AdminPage: NextPage = () => {
-  const votingContext = useContext(VotingContext);
+	const votingContext = useContext(VotingContext);
 
 	const {
 		connectWallet,
@@ -67,7 +68,7 @@ const AdminPage: NextPage = () => {
 		};
 		//eslint-disable-next-line
 	}, [error]);
-  return (
+	return (
 		<div>
 			<Head>
 				<title>Admin</title>
@@ -76,7 +77,10 @@ const AdminPage: NextPage = () => {
 			</Head>
 			<Toaster position='top-right' />
 			<main className='container mx-auto'>
-				<div className='mt-8'>
+				<div>
+					<AdminPanel />
+				</div>
+				{/* <div className='mt-8'>
 					<nav className=' flex justify-between items-center'>
 						<Link href='/'>
 							<a href='#' className='text-2xl font-bold'>
@@ -104,11 +108,10 @@ const AdminPage: NextPage = () => {
 							</button>
 						</div>
 					</nav>
-				
-				</div>
+				</div> */}
 			</main>
 		</div>
 	);
-}
+};
 
-export default AdminPage
+export default AdminPage;
