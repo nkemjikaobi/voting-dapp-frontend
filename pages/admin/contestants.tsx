@@ -1,14 +1,16 @@
 import SideBar from 'components/SideBar';
-import React from 'react';
+import React, { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import VotingContext from 'context/voting/VotingContext';
 import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import ContestantList from 'components/ContestantList';
+import CreateContestant from 'components/modals/createContestant';
 
 const ContestantPage = () => {
 	const votingContext = useContext(VotingContext);
+	const [createContestant, setCreateContestant] = useState<boolean>(false);
 
 	const {
 		connectWallet,
@@ -74,28 +76,45 @@ const ContestantPage = () => {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			<Toaster position='top-right' />
-			<SideBar />
-			<div className='flex absolute right-10 mt-8'>
-				<button className='bg-[#4B60B0] mr-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'>
-					{balance} ETH |{' '}
-					{address && (
-						<span className='ml-2 text-purple-300'>{`${address.slice(
-							0,
-							3
-						)}...${address.slice(-3)}`}</span>
-					)}
-				</button>
-				<button
-					onClick={() => disconnectWallet(web3Modal, router)}
-					className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
-				>
-					disconnect
-				</button>
+			<div className={`${createContestant && 'blur-lg'}`}>
+				<SideBar />
+				<div className='flex absolute right-10 mt-8'>
+					<button className='bg-[#4B60B0] mr-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'>
+						{balance} ETH |{' '}
+						{address && (
+							<span className='ml-2 text-purple-300'>{`${address.slice(
+								0,
+								3
+							)}...${address.slice(-3)}`}</span>
+						)}
+					</button>
+					<button
+						onClick={() => disconnectWallet(web3Modal, router)}
+						className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
+					>
+						disconnect
+					</button>
+				</div>
+				<h3 className='absolute left-[400px] top-[50px] text-4xl'>
+					Contestants
+				</h3>
+				<div className='flex absolute left-[400px] top-[100px] mt-8'>
+					<ContestantList />
+				</div>
+				<div className='absolute left-[400px] top-[500px]'>
+					<button
+						onClick={() => setCreateContestant(true)}
+						className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
+					>
+						create contestant
+					</button>
+				</div>
 			</div>
-			<h3 className='absolute left-[400px] top-[50px] text-4xl'>Contestants</h3>
-			<div className='flex absolute left-[400px] top-[100px] mt-8'>
-				<ContestantList />
-			</div>
+			{createContestant && (
+				<div className='absolute w-[500px] top-[300px] left-[600px]'>
+					<CreateContestant setCreateContestant={setCreateContestant} />
+				</div>
+			)}
 		</div>
 	);
 };

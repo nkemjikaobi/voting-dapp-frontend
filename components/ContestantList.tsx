@@ -3,7 +3,7 @@ import React from 'react';
 const ContestantList = () => {
 	return (
 		<div>
-			<table className='table-auto w-[1300px] bg-white'>
+			<table className='table-auto  w-[900px] bg-white rounded-lg'>
 				<thead>
 					<tr className='border-b-2 text-left h-16'>
 						<th>S/N</th>

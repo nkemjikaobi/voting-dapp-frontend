@@ -96,6 +96,11 @@ const UsersPage = () => {
 			<div className='flex absolute left-[400px] top-[100px] mt-8'>
 				<UserList />
 			</div>
+			<div className='absolute left-[400px] top-[500px]'>
+				<button className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'>
+					create user
+				</button>
+			</div>
 		</div>
 	);
 };
