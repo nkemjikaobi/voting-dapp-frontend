@@ -3,13 +3,15 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import toast, { Toaster } from 'react-hot-toast';
 import VotingContext from 'context/voting/VotingContext';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import SideBar from 'components/SideBar';
 import DetailCard from 'components/DetailCard';
+import Switch from 'react-switch';
 
 const AdminPage: NextPage = () => {
 	const votingContext = useContext(VotingContext);
+	const [checked, setChecked] = useState<boolean>(false);
 
 	const {
 		connectWallet,
@@ -68,6 +70,10 @@ const AdminPage: NextPage = () => {
 		};
 		//eslint-disable-next-line
 	}, [error]);
+
+	const handleChange = () => {
+		setChecked(!checked);
+	};
 	return (
 		<div>
 			<Head>
@@ -102,8 +108,18 @@ const AdminPage: NextPage = () => {
 				</div>
 				<div className=' grid grid-cols-1 md:grid-cols-3 gap-8 w-4/6 ml-32 absolute top-32 left-[300px]'>
 					<DetailCard name='Contestants' icon='ImUsers' />
-					<DetailCard name='Users' icon="FaUsers" />
+					<DetailCard name='Users' icon='FaUsers' />
 					<DetailCard name='Votes' />
+				</div>
+				<div className='absolute top-[350px] left-[400px]'>
+					<label className='flex items-center'>
+						<span className='mr-4'>Enable / Disable voting</span>
+						<Switch onChange={() => handleChange()} checked={checked} />
+					</label>
+					<label className='flex items-center mt-8'>
+						<span className='mr-4'>Show votes</span>
+						<Switch onChange={() => handleChange()} checked={checked} />
+					</label>
 				</div>
 			</main>
 		</div>
