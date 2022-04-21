@@ -3,11 +3,44 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import toast, { Toaster } from 'react-hot-toast';
-import WalletContext from 'context/voting/VotingContext';
+import VotingContext from 'context/voting/VotingContext';
 import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 const Home: NextPage = () => {
+	const votingContext = useContext(VotingContext);
+
+	const { connectWallet, message, error, clearMessage, clearError } =
+		votingContext;
+	const router = useRouter();
+
+	//Handle Messages
+	useEffect(() => {
+		let mounted = true;
+
+		if (mounted && message !== null) {
+			toast.success(message);
+			setTimeout(() => clearMessage(), 3000);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [message]);
+
+	//Handle Errors
+	useEffect(() => {
+		let mounted = true;
+
+		if (mounted && error !== null) {
+			toast.error(error);
+			setTimeout(() => clearError(), 3000);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [error]);
 	return (
 		<div>
 			<Head>
@@ -24,15 +57,25 @@ const Home: NextPage = () => {
 								Voting Dapp
 							</a>
 						</Link>
-						<button className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'>
+						<button
+							onClick={() => connectWallet(router)}
+							className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
+						>
 							connect
 						</button>
 					</nav>
 					<section className='flex items-center justify-between mt-32'>
 						<div className='flex flex-col items-center'>
-							<h3 className='text-4xl font-bold text-black my-4'>Start voting in minutes</h3>
-							<p className='text-base text-gray-400 mb-4 text-left'>Vote for your preferred candidate</p>
-							<button className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'>
+							<h3 className='text-4xl font-bold text-black my-4'>
+								Start voting in minutes
+							</h3>
+							<p className='text-base text-gray-400 mb-4 text-left'>
+								Vote for your preferred candidate
+							</p>
+							<button
+								onClick={() => connectWallet(router)}
+								className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
+							>
 								get started
 							</button>
 						</div>

@@ -72,6 +72,10 @@ const VotingState = (props: any) => {
 						balance = convertToEther(web3, result);
 					}
 				});
+				const contract = await loadContract(web3);
+				const isChairman = await contract.methods
+					.checkIfChairman(accounts[0])
+					.call();
 				dispatch({
 					type: CONNECT_WALLET,
 					payload: {
@@ -81,12 +85,17 @@ const VotingState = (props: any) => {
 						web3Modal,
 						providerOptions,
 						provider,
+						isChairman,
 					},
 				});
 				localStorage.setItem('isWalletConnected', 'true');
 				localStorage.setItem('count', '1');
-				loadContract(web3);
-				router.push('/dashboard');
+				if (isChairman) {
+					router.push('/admin');
+					localStorage.setItem('isChairman', 'true');
+				} else {
+					router.push('/dashboard');
+				}
 			}
 		} catch (error) {
 			dispatch({
@@ -107,6 +116,7 @@ const VotingState = (props: any) => {
 				type: LOAD_CONTRACT,
 				payload: contract,
 			});
+			return contract;
 		} catch (error) {
 			dispatch({
 				type: ERROR,
@@ -114,8 +124,6 @@ const VotingState = (props: any) => {
 			});
 		}
 	};
-
-
 
 	//Clear Error
 	const clearError = () => {

@@ -19,6 +19,7 @@ const VotingReducer = (state: any, action: any) => {
 				web3Modal: action.payload.web3Modal,
 				providerOptions: action.payload.providerOptions,
 				provider: action.payload.provider,
+				isChairman: action.payload.isChairman,
 			};
 		case LOAD_CONTRACT:
 			return {
@@ -36,6 +37,7 @@ const VotingReducer = (state: any, action: any) => {
 				web3Modal: null,
 				providerOptions: null,
 				provider: null,
+				isChairman: false,
 			};
 		case ERROR:
 			return {
