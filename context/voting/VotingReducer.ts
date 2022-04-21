@@ -5,6 +5,8 @@ import {
 	CLEAR_MESSAGE,
 	DISCONNECT_WALLET,
 	LOAD_CONTRACT,
+	FETCH_CONTESTANTS,
+	FETCH_USERS,
 } from '../types';
 
 const VotingReducer = (state: any, action: any) => {
@@ -25,6 +27,17 @@ const VotingReducer = (state: any, action: any) => {
 			return {
 				...state,
 				contract: action.payload,
+			};
+
+		case FETCH_CONTESTANTS:
+			return {
+				...state,
+				contestants: action.payload,
+			};
+		case FETCH_USERS:
+			return {
+				...state,
+				users: action.payload,
 			};
 
 		case DISCONNECT_WALLET:

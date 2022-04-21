@@ -23,11 +23,20 @@ const AdminPage: NextPage = () => {
 		address,
 		web3Modal,
 		disconnectWallet,
+		fetchContestants,
+		fetchUsers,
+		contract,
+		contestants,
+		users,
 	} = votingContext;
 	const router = useRouter();
 
 	const reconnectWallet = async () => {
 		await connectWallet(router);
+	};
+
+	const getContestants = async (contract: any) => {
+		const contestants = await contract.methods.getContestants().call();
 	};
 
 	//Reconnect wallet on page refresh
@@ -71,6 +80,30 @@ const AdminPage: NextPage = () => {
 		//eslint-disable-next-line
 	}, [error]);
 
+	//Fetch users
+	useEffect(() => {
+		let mounted = true;
+		if (mounted && address !== null && contract !== null) {
+			fetchUsers(contract);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [address, contract]);
+
+	//Fetch contestants
+	useEffect(() => {
+		let mounted = true;
+		if (mounted && address !== null && contract !== null) {
+			fetchContestants(contract);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [address, contract]);
+
 	const handleChange = () => {
 		setChecked(!checked);
 	};
@@ -87,9 +120,7 @@ const AdminPage: NextPage = () => {
 					<SideBar />
 				</div>
 				<div className='flex absolute right-10 mt-8'>
-					<button
-						className='bg-[#4B60B0] mr-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
-					>
+					<button className='bg-[#4B60B0] mr-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'>
 						{balance} ETH |{' '}
 						{address && (
 							<span className='ml-2 text-purple-300'>{`${address.slice(
@@ -106,8 +137,12 @@ const AdminPage: NextPage = () => {
 					</button>
 				</div>
 				<div className=' grid grid-cols-1 md:grid-cols-3 gap-8 w-4/6 ml-32 absolute top-32 left-[300px]'>
-					<DetailCard name='Contestants' icon='ImUsers' />
-					<DetailCard name='Users' icon='FaUsers' />
+					<DetailCard
+						name='Contestants'
+						icon='ImUsers'
+						count={contestants}
+					/>
+					<DetailCard name='Users' icon='FaUsers' count={users} />
 					<DetailCard name='Votes' />
 				</div>
 				<div className='absolute top-[350px] left-[400px]'>

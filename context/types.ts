@@ -4,3 +4,5 @@ export const LOAD_CONTRACT = 'LOAD_CONTRACT';
 export const ERROR = 'ERROR';
 export const CLEAR_ERROR = 'CLEAR_ERROR';
 export const CLEAR_MESSAGE = 'CLEAR_MESSAGE';
+export const FETCH_CONTESTANTS = 'FETCH_CONTESTANTS';
+export const FETCH_USERS = 'FETCH_USERS';

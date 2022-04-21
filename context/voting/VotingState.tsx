@@ -8,12 +8,15 @@ import {
 	CLEAR_MESSAGE,
 	DISCONNECT_WALLET,
 	LOAD_CONTRACT,
+	FETCH_CONTESTANTS,
+	FETCH_USERS,
 } from '../types';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import VotingJson from 'artifacts/voting.json';
 import convertToEther from 'helpers/convertToEther';
+import { constants } from 'buffer';
 
 const VotingState = (props: any) => {
 	const initialState = {
@@ -129,6 +132,38 @@ const VotingState = (props: any) => {
 		}
 	};
 
+	//fetch contestants
+	const fetchContestants = async (contract: any) => {
+		try {
+			const contestants = await contract.methods.getContestants().call();
+			dispatch({
+				type: FETCH_CONTESTANTS,
+				payload: contestants,
+			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	//fetch users
+	const fetchUsers = async (contract: any) => {
+		try {
+			const users = await contract.methods.getUsers().call();
+			dispatch({
+				type: FETCH_USERS,
+				payload: users,
+			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
 	//Clear Error
 	const clearError = () => {
 		dispatch({
@@ -175,6 +210,8 @@ const VotingState = (props: any) => {
 				disconnectWallet,
 				clearMessage,
 				loadContract,
+				fetchContestants,
+				fetchUsers,
 			}}
 		>
 			{props.children}
