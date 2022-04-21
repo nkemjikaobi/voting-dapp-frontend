@@ -35,7 +35,7 @@ const VotingState = (props: any) => {
 	const [state, dispatch] = useReducer(VotingReducer, initialState);
 
 	//Connect Wallet
-	const connectWallet = async (router: any) => {
+	const connectWallet = async (router: any, path: string = '') => {
 		const providerOptions = {
 			walletconnect: {
 				package: WalletConnectProvider, // required
@@ -90,6 +90,10 @@ const VotingState = (props: any) => {
 				});
 				localStorage.setItem('isWalletConnected', 'true');
 				localStorage.setItem('count', '1');
+				if (path) {
+					localStorage.setItem('isChairman', 'true');
+					return router.push(path);
+				}
 				if (isChairman) {
 					router.push('/admin');
 					localStorage.setItem('isChairman', 'true');

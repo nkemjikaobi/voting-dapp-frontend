@@ -23,7 +23,9 @@ const SideBar = () => {
 			<Link href='/admin'>
 				<a
 					href='#'
-					className='flex items-center mt-16 hover:text-[#498feb] cursor-pointer'
+					className={`flex items-center mt-16 hover:text-[#498feb] cursor-pointer ${
+						router.pathname === '/admin' && 'text-[#498feb]'
+					}`}
 				>
 					<RiDashboardLine className='text-3xl mr-4' /> Manage
 				</a>
@@ -31,7 +33,9 @@ const SideBar = () => {
 			<Link href='/admin/contestants'>
 				<a
 					href='#'
-					className='flex items-center mt-16 hover:text-[#498feb] cursor-pointer'
+					className={`flex items-center mt-16 hover:text-[#498feb] cursor-pointer ${
+						router.pathname === '/admin/contestants' && 'text-[#498feb]'
+					}`}
 				>
 					<ImUsers className='text-3xl mr-4' /> Contestants
 				</a>
@@ -39,7 +43,9 @@ const SideBar = () => {
 			<Link href='/admin/users'>
 				<a
 					href='#'
-					className='flex items-center mt-16 hover:text-[#498feb] cursor-pointer'
+					className={`flex items-center mt-16 hover:text-[#498feb] cursor-pointer ${
+						router.pathname === '/admin/users' && 'text-[#498feb]'
+					}`}
 				>
 					<FaUsers className='text-3xl mr-4' /> Users
 				</a>

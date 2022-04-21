@@ -88,7 +88,6 @@ const AdminPage: NextPage = () => {
 				</div>
 				<div className='flex absolute right-10 mt-8'>
 					<button
-						onClick={() => connectWallet(router)}
 						className='bg-[#4B60B0] mr-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
 					>
 						{balance} ETH |{' '}
