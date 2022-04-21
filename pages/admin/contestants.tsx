@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import ContestantList from 'components/ContestantList';
 import CreateContestant from 'components/modals/createContestant';
+import ChangeUserType from 'components/modals/ChangeUserType';
 
 const ContestantPage = () => {
 	const votingContext = useContext(VotingContext);

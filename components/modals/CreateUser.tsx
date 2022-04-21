@@ -4,27 +4,44 @@ import VotingContext from 'context/voting/VotingContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { FaSpinner } from 'react-icons/fa';
 
-const CreateContestant = ({ setCreateContestant }: any) => {
+const CreateUser = ({ setCreateUser }: any) => {
 	const [loading, setLoading] = useState(false);
-	const [name, setName] = useState('');
+	const [address, setAddress] = useState<string>('');
+	const [userType, setUserType] = useState<any>(2);
 	return (
 		<div className='text-white bg-black rounded-lg p-10'>
 			<Toaster position='top-right' />
 			<div className='flex justify-end items-center cursor-pointer'>
-				<AiOutlineClose onClick={() => setCreateContestant(false)} />
+				<AiOutlineClose onClick={() => setCreateUser(false)} />
 			</div>
 			<div className=''>
 				<div>
 					<label className='block font-bold text-base mb-2' htmlFor=''>
-						Contestant Name
+						User Address
 					</label>
 					<input
 						type='text'
 						className='bg-zinc-900 w-full text-white rounded-lg p-5 border border-stone-400'
-						placeholder='contestant name'
-						value={name}
-						onChange={e => setName(e.target.value)}
+						placeholder='user address'
+						value={address}
+						onChange={e => setAddress(e.target.value)}
 					/>
+				</div>
+				<div className='mt-8'>
+					<label className='block font-bold text-base mb-2' htmlFor=''>
+						User Type
+					</label>
+					<select
+						className='bg-zinc-900 w-full text-white rounded-lg p-5 border border-stone-400'
+						value={userType}
+						onChange={e => setUserType(e.target.value)}
+					>
+						<option value={0}>Board Member</option>
+						<option value={1}>Teacher</option>
+						<option selected value={2}>
+							Student
+						</option>
+					</select>
 				</div>
 				<button
 					//onClick={() => handleShare()}
@@ -36,7 +53,7 @@ const CreateContestant = ({ setCreateContestant }: any) => {
 							Creating
 						</>
 					) : (
-						<>Create Contestant</>
+						<>Create User</>
 					)}
 				</button>
 			</div>
@@ -44,4 +61,4 @@ const CreateContestant = ({ setCreateContestant }: any) => {
 	);
 };
 
-export default CreateContestant;
+export default CreateUser;

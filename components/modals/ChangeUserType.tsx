@@ -4,27 +4,40 @@ import VotingContext from 'context/voting/VotingContext';
 import toast, { Toaster } from 'react-hot-toast';
 import { FaSpinner } from 'react-icons/fa';
 
-const CreateContestant = ({ setCreateContestant }: any) => {
+const ChangeUserType = ({ setChangeUserType }: any) => {
 	const [loading, setLoading] = useState(false);
-	const [name, setName] = useState('');
+	const [id, setId] = useState<any>('');
+	const [userType, setUserType] = useState<any>(2);
 	return (
 		<div className='text-white bg-black rounded-lg p-10'>
 			<Toaster position='top-right' />
 			<div className='flex justify-end items-center cursor-pointer'>
-				<AiOutlineClose onClick={() => setCreateContestant(false)} />
+				<AiOutlineClose onClick={() => setChangeUserType(false)} />
 			</div>
 			<div className=''>
 				<div>
-					<label className='block font-bold text-base mb-2' htmlFor=''>
-						Contestant Name
-					</label>
 					<input
-						type='text'
+						type='hidden'
 						className='bg-zinc-900 w-full text-white rounded-lg p-5 border border-stone-400'
-						placeholder='contestant name'
-						value={name}
-						onChange={e => setName(e.target.value)}
+						value={id}
+						onChange={e => setId(e.target.value)}
 					/>
+				</div>
+				<div className='mt-8'>
+					<label className='block font-bold text-base mb-2' htmlFor=''>
+						User Type
+					</label>
+					<select
+						className='bg-zinc-900 w-full text-white rounded-lg p-5 border border-stone-400'
+						value={userType}
+						onChange={e => setUserType(e.target.value)}
+					>
+						<option value={0}>Board Member</option>
+						<option value={1}>Teacher</option>
+						<option selected value={2}>
+							Student
+						</option>
+					</select>
 				</div>
 				<button
 					//onClick={() => handleShare()}
@@ -33,10 +46,10 @@ const CreateContestant = ({ setCreateContestant }: any) => {
 					{loading ? (
 						<>
 							<FaSpinner className='animate-spin h-5 w-5 mr-3' />
-							Creating
+							Changing
 						</>
 					) : (
-						<>Create Contestant</>
+						<>Change User Type</>
 					)}
 				</button>
 			</div>
@@ -44,4 +57,4 @@ const CreateContestant = ({ setCreateContestant }: any) => {
 	);
 };
 
-export default CreateContestant;
+export default ChangeUserType;
