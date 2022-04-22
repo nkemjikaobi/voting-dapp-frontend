@@ -40,12 +40,16 @@ _To Create a smart contract that enables the following:_
 
 https://voting-dapp-frontend.vercel.app/
 
+
 #
 > ## Technologies
 | <b><u>Stack</u></b> | <b><u>Usage</u></b> |
 | :------------------ | :------------------ |
-|  **`React JS`**     |     Frontend        |
+|  **`React JS`**     |                     |
+|   **`Next js`**     |     Frontend        |
+|   **`Typescript`**  |                     |
 |  **`Solidity`**     |   Smart contract    |
+
 
 #
 > ## Repo Setup
