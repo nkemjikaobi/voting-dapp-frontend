@@ -26,6 +26,7 @@ const DashboardPage: NextPage = () => {
 		fetchContestants,
 		isVoteEnabled,
 		checkIfEnded,
+		checkIfContractIsDisabled,
 		isVoteVisble,
 		fetchUsers,
 	} = votingContext;
@@ -55,6 +56,7 @@ const DashboardPage: NextPage = () => {
 			isVoteEnabled(contract);
 			isVoteVisble(contract);
 			checkIfEnded(contract);
+			checkIfContractIsDisabled(contract);
 		}
 		return () => {
 			mounted = false;

@@ -10,7 +10,8 @@ import {
 	IS_VOTING_ENABLED,
 	IS_VOTING_VISIBLE,
 	FETCH_VOTES,
-	IS_VOTING_ENDED
+	IS_VOTING_ENDED,
+	IS_CONTRACT_DISABLED
 } from '../types';
 
 const VotingReducer = (state: any, action: any) => {
@@ -42,6 +43,11 @@ const VotingReducer = (state: any, action: any) => {
 			return {
 				...state,
 				isVotingEnded: action.payload,
+			};
+		case IS_CONTRACT_DISABLED:
+			return {
+				...state,
+				isContractDisabled: action.payload,
 			};
 		case IS_VOTING_ENABLED:
 			return {

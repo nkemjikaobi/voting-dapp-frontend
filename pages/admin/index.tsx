@@ -16,6 +16,7 @@ const AdminPage: NextPage = () => {
 	const [loading1, setLoading1] = useState<boolean>(false);
 	const [loading2, setLoading2] = useState<boolean>(false);
 	const [loading3, setLoading3] = useState(false);
+	const [loading4, setLoading4] = useState(false);
 
 	const {
 		connectWallet,
@@ -42,9 +43,11 @@ const AdminPage: NextPage = () => {
 		votes,
 		isVoteEnabled,
 		checkIfEnded,
+		checkIfContractIsDisabled,
 		isVoteVisble,
 		fetchVotes,
 		isVotingEnded,
+		isContractDisabled,
 		collateResults,
 	} = votingContext;
 	const router = useRouter();
@@ -100,6 +103,7 @@ const AdminPage: NextPage = () => {
 		if (mounted && contract !== null) {
 			isVoteEnabled(contract);
 			checkIfEnded(contract);
+			checkIfContractIsDisabled(contract);
 			isVoteVisble(contract);
 		}
 		return () => {
@@ -202,6 +206,30 @@ const AdminPage: NextPage = () => {
 		}
 		setLoading3(false);
 	};
+
+	const handleDisableContract = async () => {
+		setLoading4(true);
+		if (isContractDisabled) {
+			try {
+				await contract.methods.enableContract().send({
+					from: address,
+				});
+				toast.success('Contract is now active');
+			} catch (error) {
+				toast.error((error as Error).message);
+			}
+		} else {
+			try {
+				await contract.methods.disableContract().send({
+					from: address,
+				});
+				toast.success('Contract has been disabled');
+			} catch (error) {
+				toast.error((error as Error).message);
+			}
+		}
+		setLoading4(false);
+	};
 	return (
 		<div>
 			<Head>
@@ -263,6 +291,21 @@ const AdminPage: NextPage = () => {
 							<>voting ended</>
 						) : (
 							<>end vote</>
+						)}
+					</button>
+					<button
+						onClick={() => handleDisableContract()}
+						className='bg-[#4B60B0] mt-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
+					>
+						{loading4 ? (
+							<>
+								<FaSpinner className='animate-spin h-5 w-5 mr-3' />
+								changing state...
+							</>
+						) : isContractDisabled ? (
+							<>contract disabled</>
+						) : (
+							<>change state of contract</>
 						)}
 					</button>
 				</div>

@@ -14,6 +14,7 @@ import {
 	IS_VOTING_ENABLED,
 	IS_VOTING_VISIBLE,
 	IS_VOTING_ENDED,
+	IS_CONTRACT_DISABLED,
 } from '../types';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
@@ -39,6 +40,7 @@ const VotingState = (props: any) => {
 		isVotingEnabled: true,
 		isVoteVisible: false,
 		isVotingEnded: false,
+		isContractDisabled: false,
 		votes: null,
 		user: null,
 	};
@@ -340,6 +342,22 @@ const VotingState = (props: any) => {
 		}
 	};
 
+	//check if contract is disabled
+	const checkIfContractIsDisabled = async (contract: any) => {
+		try {
+			const response = await contract.methods.contractDisabled().call();
+			dispatch({
+				type: IS_CONTRACT_DISABLED,
+				payload: response,
+			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
 	//is vote enabled
 	const isVoteEnabled = async (contract: any) => {
 		try {
@@ -463,6 +481,7 @@ const VotingState = (props: any) => {
 				user: state.user,
 				votes: state.votes,
 				isVotingEnded: state.isVotingEnded,
+				isContractDisabled: state.isContractDisabled,
 				clearError,
 				connectWallet,
 				disconnectWallet,
@@ -483,6 +502,7 @@ const VotingState = (props: any) => {
 				fetchVotes,
 				checkIfEnded,
 				collateResults,
+				checkIfContractIsDisabled,
 			}}
 		>
 			{props.children}
