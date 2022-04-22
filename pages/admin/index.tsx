@@ -44,6 +44,7 @@ const AdminPage: NextPage = () => {
 		checkIfEnded,
 		isVoteVisble,
 		fetchVotes,
+		isVotingEnded,
 		collateResults,
 	} = votingContext;
 	const router = useRouter();
@@ -258,6 +259,8 @@ const AdminPage: NextPage = () => {
 								<FaSpinner className='animate-spin h-5 w-5 mr-3' />
 								ending
 							</>
+						) : isVotingEnded ? (
+							<>voting ended</>
 						) : (
 							<>end vote</>
 						)}

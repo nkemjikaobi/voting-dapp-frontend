@@ -54,7 +54,7 @@ const DashboardPage: NextPage = () => {
 		if (mounted && contract !== null) {
 			isVoteEnabled(contract);
 			isVoteVisble(contract);
-			checkIfEnded(contract)
+			checkIfEnded(contract);
 		}
 		return () => {
 			mounted = false;
@@ -113,6 +113,7 @@ const DashboardPage: NextPage = () => {
 		};
 		//eslint-disable-next-line
 	}, [address, contract]);
+
 
 	return (
 		<div>
