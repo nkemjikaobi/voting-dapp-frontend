@@ -6,8 +6,7 @@ import { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import ContestantList from 'components/ContestantList';
-import CreateContestant from 'components/modals/createContestant';
-import ChangeUserType from 'components/modals/ChangeUserType';
+import CreateContestant from 'components/modals/CreateContestantt';
 
 const ContestantPage = () => {
 	const votingContext = useContext(VotingContext);
