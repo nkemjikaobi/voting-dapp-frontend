@@ -65,7 +65,11 @@ Change directory to the cloned repo and set the original Pace-University-Zuri re
 #
 
 > ## Contributors
+ - Nkemjika obi
 
+ - Victor Oisamoje
+
+ - Eze Adanna Lynda
 #
 > ## Contributing to the project
 
@@ -80,4 +84,4 @@ Before adding a pull request, please note:
 
 All **`suggestions`** are welcome!
 #
-> ###### README Created by `Nkem jikaobi` for Team-f
+> ###### README Created by `Nkemjika obi` for Team-f
