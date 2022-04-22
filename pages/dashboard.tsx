@@ -21,6 +21,11 @@ const DashboardPage: NextPage = () => {
 		address,
 		web3Modal,
 		disconnectWallet,
+		contestants,
+		contract,
+		fetchContestants,
+		isVoteEnabled,
+		isVoteVisble,
 	} = votingContext;
 	const router = useRouter();
 
@@ -40,6 +45,19 @@ const DashboardPage: NextPage = () => {
 		};
 		//eslint-disable-next-line
 	}, []);
+
+	useEffect(() => {
+		let mounted = true;
+
+		if (mounted && contract !== null) {
+			isVoteEnabled(contract);
+			isVoteVisble(contract);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [contract]);
 
 	//Handle Messages
 	useEffect(() => {
@@ -68,6 +86,19 @@ const DashboardPage: NextPage = () => {
 		};
 		//eslint-disable-next-line
 	}, [error]);
+
+	//Fetch contestants
+	useEffect(() => {
+		let mounted = true;
+		if (mounted && address !== null && contract !== null) {
+			fetchContestants(contract);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [address, contract]);
+
 	return (
 		<div>
 			<Head>
@@ -106,12 +137,15 @@ const DashboardPage: NextPage = () => {
 						</div>
 					</nav>
 					<div className=' mt-8 grid grid-cols-1 md:grid-cols-3 gap-4'>
-						<VoterCard />
-						<VoterCard />
-						<VoterCard />
-						<VoterCard />
-						<VoterCard />
-						<VoterCard />
+						{contestants.length > 0 ? (
+							contestants.map((contestant: any, index: number) => (
+								<div key={index}>
+									<VoterCard contestant={contestant} />
+								</div>
+							))
+						) : (
+							<div>No contestants yet...</div>
+						)}
 					</div>
 				</div>
 			</main>
