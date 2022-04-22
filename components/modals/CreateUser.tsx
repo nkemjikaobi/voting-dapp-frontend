@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import VotingContext from 'context/voting/VotingContext';
 import toast, { Toaster } from 'react-hot-toast';
@@ -6,8 +6,24 @@ import { FaSpinner } from 'react-icons/fa';
 
 const CreateUser = ({ setCreateUser }: any) => {
 	const [loading, setLoading] = useState(false);
-	const [address, setAddress] = useState<string>('');
+	const [address1, setAddress] = useState<string>('');
 	const [userType, setUserType] = useState<any>(2);
+	const votingContext = useContext(VotingContext);
+	const { createUser, contract, address } = votingContext;
+	const handleSubmit = async () => {
+		if (address1 === '') {
+			return toast.error('Provide an address');
+		}
+		setLoading(true);
+		try {
+			await createUser(contract, address, address1, userType);
+			toast.success('User created');
+		} catch (error) {
+			toast.error((error as Error).message);
+		}
+		setLoading(false);
+		setCreateUser(false);
+	};
 	return (
 		<div className='text-white bg-black rounded-lg p-10'>
 			<Toaster position='top-right' />
@@ -23,7 +39,7 @@ const CreateUser = ({ setCreateUser }: any) => {
 						type='text'
 						className='bg-zinc-900 w-full text-white rounded-lg p-5 border border-stone-400'
 						placeholder='user address'
-						value={address}
+						value={address1}
 						onChange={e => setAddress(e.target.value)}
 					/>
 				</div>
@@ -44,7 +60,7 @@ const CreateUser = ({ setCreateUser }: any) => {
 					</select>
 				</div>
 				<button
-					//onClick={() => handleShare()}
+					onClick={() => handleSubmit()}
 					className='flex justify-center items-center mt-10 bg-[#4B60B0] w-48 px-5 py-3 text-base rounded-lg hover:bg-slate-900'
 				>
 					{loading ? (

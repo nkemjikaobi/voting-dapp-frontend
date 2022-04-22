@@ -24,6 +24,9 @@ const UsersPage = () => {
 		address,
 		web3Modal,
 		disconnectWallet,
+		fetchUsers,
+		users,
+		contract
 	} = votingContext;
 	const router = useRouter();
 	const reconnectWallet = async () => {
@@ -70,6 +73,19 @@ const UsersPage = () => {
 		};
 		//eslint-disable-next-line
 	}, [error]);
+
+	//Fetch users
+	useEffect(() => {
+		let mounted = true;
+		if (mounted && address !== null && contract !== null) {
+			fetchUsers(contract, address);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [address, contract]);
+
 	return (
 		<div>
 			<Head>
@@ -100,16 +116,16 @@ const UsersPage = () => {
 					</button>
 				</div>
 				<h3 className='absolute left-[400px] top-[50px] text-4xl'>Users</h3>
-				<div className='flex absolute left-[400px] top-[100px] mt-8'>
-					<UserList setChangeUserType={setChangeUserType} />
-				</div>
-				<div className='absolute left-[400px] top-[500px]'>
+				<div className='absolute left-[600px] top-[50px]'>
 					<button
 						onClick={() => setCreateUser(true)}
 						className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
 					>
 						create user
 					</button>
+				</div>
+				<div className='flex absolute left-[400px] top-[100px] mt-8'>
+					<UserList data={users} setChangeUserType={setChangeUserType} />
 				</div>
 			</div>
 			{createUser && (

@@ -115,16 +115,16 @@ const ContestantPage = () => {
 				<h3 className='absolute left-[400px] top-[50px] text-4xl'>
 					Contestants
 				</h3>
-				<div className='flex absolute left-[400px] top-[100px] mt-8'>
-					<ContestantList data={contestants} />
-				</div>
-				<div className='absolute left-[400px] top-[500px]'>
+				<div className='absolute left-[700px] top-[50px]'>
 					<button
 						onClick={() => setCreateContestant(true)}
 						className='bg-[#4B60B0] flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
 					>
 						create contestant
 					</button>
+				</div>
+				<div className='flex absolute left-[400px] top-[100px] mt-8'>
+					<ContestantList data={contestants} />
 				</div>
 			</div>
 			{createContestant && (
