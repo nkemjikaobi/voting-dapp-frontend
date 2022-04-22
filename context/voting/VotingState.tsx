@@ -358,6 +358,7 @@ const VotingState = (props: any) => {
 		});
 		localStorage.removeItem('isWalletConnected');
 		localStorage.removeItem('count');
+		localStorage.removeItem('isChairman');
 		router.push('/');
 	};
 
