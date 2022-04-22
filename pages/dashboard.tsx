@@ -25,7 +25,9 @@ const DashboardPage: NextPage = () => {
 		contract,
 		fetchContestants,
 		isVoteEnabled,
+		checkIfEnded,
 		isVoteVisble,
+		fetchUsers,
 	} = votingContext;
 	const router = useRouter();
 
@@ -52,6 +54,7 @@ const DashboardPage: NextPage = () => {
 		if (mounted && contract !== null) {
 			isVoteEnabled(contract);
 			isVoteVisble(contract);
+			checkIfEnded(contract)
 		}
 		return () => {
 			mounted = false;
@@ -92,6 +95,18 @@ const DashboardPage: NextPage = () => {
 		let mounted = true;
 		if (mounted && address !== null && contract !== null) {
 			fetchContestants(contract);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [address, contract]);
+
+	//Fetch users
+	useEffect(() => {
+		let mounted = true;
+		if (mounted && address !== null && contract !== null) {
+			fetchUsers(contract, address);
 		}
 		return () => {
 			mounted = false;

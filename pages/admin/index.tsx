@@ -9,11 +9,13 @@ import SideBar from 'components/SideBar';
 import DetailCard from 'components/DetailCard';
 import Switch from 'react-switch';
 import formatUserType from 'helpers/formatUserType';
+import { FaSpinner } from 'react-icons/fa';
 
 const AdminPage: NextPage = () => {
 	const votingContext = useContext(VotingContext);
 	const [loading1, setLoading1] = useState<boolean>(false);
 	const [loading2, setLoading2] = useState<boolean>(false);
+	const [loading3, setLoading3] = useState(false);
 
 	const {
 		connectWallet,
@@ -37,8 +39,12 @@ const AdminPage: NextPage = () => {
 		showVotes,
 		hideVotes,
 		user,
+		votes,
 		isVoteEnabled,
+		checkIfEnded,
 		isVoteVisble,
+		fetchVotes,
+		collateResults,
 	} = votingContext;
 	const router = useRouter();
 
@@ -92,6 +98,7 @@ const AdminPage: NextPage = () => {
 
 		if (mounted && contract !== null) {
 			isVoteEnabled(contract);
+			checkIfEnded(contract);
 			isVoteVisble(contract);
 		}
 		return () => {
@@ -117,6 +124,18 @@ const AdminPage: NextPage = () => {
 		let mounted = true;
 		if (mounted && address !== null && contract !== null) {
 			fetchContestants(contract);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [address, contract]);
+
+	//Fetch votes
+	useEffect(() => {
+		let mounted = true;
+		if (mounted && address !== null && contract !== null) {
+			fetchVotes(contract);
 		}
 		return () => {
 			mounted = false;
@@ -171,6 +190,17 @@ const AdminPage: NextPage = () => {
 			}
 		}
 	};
+
+	const handleEndVotes = async () => {
+		setLoading3(true);
+		try {
+			const type = formatUserType(user.userType);
+			await collateResults(contract, address, type);
+		} catch (error) {
+			toast.error((error as Error).message);
+		}
+		setLoading3(false);
+	};
 	return (
 		<div>
 			<Head>
@@ -203,7 +233,7 @@ const AdminPage: NextPage = () => {
 				<div className=' grid grid-cols-1 md:grid-cols-3 gap-8 w-4/6 ml-32 absolute top-32 left-[300px]'>
 					<DetailCard name='Contestants' icon='ImUsers' count={contestants} />
 					<DetailCard name='Users' icon='FaUsers' count={users} />
-					<DetailCard name='Votes' />
+					<DetailCard name='Votes' count={votes} />
 				</div>
 				<div className='absolute top-[350px] left-[400px]'>
 					<label className='flex items-center'>
@@ -219,6 +249,19 @@ const AdminPage: NextPage = () => {
 						/>
 						{loading2 && <p className='ml-2'>please wait...</p>}
 					</label>
+					<button
+						onClick={() => handleEndVotes()}
+						className='bg-[#4B60B0] mt-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'
+					>
+						{loading3 ? (
+							<>
+								<FaSpinner className='animate-spin h-5 w-5 mr-3' />
+								ending
+							</>
+						) : (
+							<>end vote</>
+						)}
+					</button>
 				</div>
 			</main>
 		</div>

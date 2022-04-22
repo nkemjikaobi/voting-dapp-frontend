@@ -10,11 +10,10 @@ import {
 	LOAD_CONTRACT,
 	FETCH_CONTESTANTS,
 	FETCH_USERS,
+	FETCH_VOTES,
 	IS_VOTING_ENABLED,
 	IS_VOTING_VISIBLE,
-	CREATE_USER,
-	CREATE_CONTESTANT,
-	CHANGE_USER_TYPE,
+	IS_VOTING_ENDED,
 } from '../types';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
@@ -39,6 +38,8 @@ const VotingState = (props: any) => {
 		contestants: [],
 		isVotingEnabled: true,
 		isVoteVisible: false,
+		isVotingEnded: false,
+		votes: null,
 		user: null,
 	};
 
@@ -164,6 +165,29 @@ const VotingState = (props: any) => {
 		}
 	};
 
+	//fetch votes
+	const fetchVotes = async (contract: any) => {
+		try {
+			const res = await contract.methods.fetchVotes().call();
+			let votes: any = [];
+			res.map((dat: any) => {
+				let item: any = {};
+				item.id = dat.id;
+				item.contestantId = dat.contestantId;
+				votes.push(item);
+			});
+			dispatch({
+				type: FETCH_VOTES,
+				payload: votes,
+			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
 	//fetch users
 	const fetchUsers = async (contract: any, address: any) => {
 		try {
@@ -200,6 +224,46 @@ const VotingState = (props: any) => {
 			await contract.methods.createUser(userAddress, userType).send({
 				from: address,
 			});
+			await fetchUsers(contract, address);
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	//collate results
+	const collateResults = async (
+		contract: any,
+		address: string,
+		userType: any
+	) => {
+		try {
+			await contract.methods.collateResults(userType).send({
+				from: address,
+			});
+			await checkIfEnded(contract);
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	const vote = async (
+		contract: any,
+		address: string,
+		contestantId: any,
+		userId: any
+	) => {
+		try {
+			await contract.methods.vote(contestantId, userId).send({
+				from: address,
+			});
+			await fetchContestants(contract);
+
 			await fetchUsers(contract, address);
 		} catch (error) {
 			dispatch({
@@ -250,6 +314,22 @@ const VotingState = (props: any) => {
 			const response = await contract.methods.isVotingVisible().call();
 			dispatch({
 				type: IS_VOTING_VISIBLE,
+				payload: response,
+			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	//check if voting has ended
+	const checkIfEnded = async (contract: any) => {
+		try {
+			const response = await contract.methods.isVotingEnded().call();
+			dispatch({
+				type: IS_VOTING_ENDED,
 				payload: response,
 			});
 		} catch (error) {
@@ -381,6 +461,8 @@ const VotingState = (props: any) => {
 				isVotingEnabled: state.isVotingEnabled,
 				isVoteVisible: state.isVoteVisible,
 				user: state.user,
+				votes: state.votes,
+				isVotingEnded: state.isVotingEnded,
 				clearError,
 				connectWallet,
 				disconnectWallet,
@@ -397,6 +479,10 @@ const VotingState = (props: any) => {
 				changeUserType,
 				createContestant,
 				createUser,
+				vote,
+				fetchVotes,
+				checkIfEnded,
+				collateResults,
 			}}
 		>
 			{props.children}

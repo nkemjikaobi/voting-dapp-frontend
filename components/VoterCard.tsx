@@ -4,6 +4,8 @@ import { AiOutlineClose } from 'react-icons/ai';
 import axios from 'axios';
 import Image from 'next/image';
 import VotingContext from 'context/voting/VotingContext';
+import toast from 'react-hot-toast';
+import { FaSpinner } from 'react-icons/fa';
 
 const VoterCard = ({ contestant }: any) => {
 	const [user1, setUser] = useState<any>(null);
@@ -11,15 +13,42 @@ const VoterCard = ({ contestant }: any) => {
 		const res = await axios.get('https://randomuser.me/api/');
 		setUser(res.data.results[0].picture);
 	};
+	const [loading, setLoading] = useState(false);
 	const votingContext = useContext(VotingContext);
 
-	const { user, isVotingEnabled, isVoteVisible } = votingContext;
+	const { user, isVotingEnabled, isVoteVisible, vote, contract, address } =
+		votingContext;
 
 	useEffect(() => {
 		if (user1 === null) {
 			fetchUserImage();
 		}
 	}, [user1]);
+
+	const checkIfValidUser = async (contract: any, address: any) => {
+		try {
+			const res = await contract.methods.isValidUser(address).call();
+			return res;
+		} catch (error) {
+			toast.error((error as Error).message);
+		}
+	};
+
+	const handleVote = async () => {
+		setLoading(true);
+		const res = await checkIfValidUser(contract, address);
+		if (!res) {
+			setLoading(false);
+			return toast.error('Contact the chairman to add you as a user');
+		}
+		try {
+			await vote(contract, address, contestant.id, user.userId);
+			toast.success('Vote successful');
+		} catch (error) {
+			toast.error((error as Error).message);
+		}
+		setLoading(false);
+	};
 	return (
 		<div className='bg-white drop-shadow-md flex flex-col justify-center items-center rounded-lg'>
 			<h4 className='my-4 font-bold'>Voter details</h4>
@@ -56,10 +85,19 @@ const VoterCard = ({ contestant }: any) => {
 
 			<button
 				className={`bg-[#4B60B0] mb-8 w-2/3 my-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900 ${
-					!isVotingEnabled && 'pointer-events-none opacity-30'
+					!isVotingEnabled ||
+					(user.hasVoted && 'pointer-events-none opacity-30')
 				}`}
+				onClick={() => handleVote()}
 			>
-				vote
+				{loading ? (
+					<>
+						<FaSpinner className='animate-spin h-5 w-5 mr-3' />
+						casting vote
+					</>
+				) : (
+					<>vote</>
+				)}
 			</button>
 		</div>
 	);
