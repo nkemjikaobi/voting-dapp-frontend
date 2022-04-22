@@ -1,7 +1,7 @@
 import React from 'react';
 import { AiFillEdit } from 'react-icons/ai';
 
-const UserList = ({ setChangeUserType, data }: any) => {
+const UserList = ({ setChangeUserType, data, setUserId, setUserType }: any) => {
 	return (
 		<div>
 			<table className='table-auto w-[900px] bg-white rounded-lg'>
@@ -28,7 +28,11 @@ const UserList = ({ setChangeUserType, data }: any) => {
 								<td>
 									<AiFillEdit
 										className='text-2xl'
-										onClick={() => setChangeUserType(true)}
+										onClick={() => {
+											setChangeUserType(true);
+											setUserId(d.userId);
+											setUserType(d.userType);
+										}}
 									/>
 								</td>
 							</tr>

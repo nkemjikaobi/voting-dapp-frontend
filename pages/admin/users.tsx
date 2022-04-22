@@ -13,6 +13,8 @@ const UsersPage = () => {
 	const votingContext = useContext(VotingContext);
 	const [createUser, setCreateUser] = useState<boolean>(false);
 	const [changeUserType, setChangeUserType] = useState<boolean>(false);
+	const [userId, setUserId] = useState();
+	const [userType, setUserType] = useState();
 
 	const {
 		connectWallet,
@@ -26,7 +28,7 @@ const UsersPage = () => {
 		disconnectWallet,
 		fetchUsers,
 		users,
-		contract
+		contract,
 	} = votingContext;
 	const router = useRouter();
 	const reconnectWallet = async () => {
@@ -125,7 +127,12 @@ const UsersPage = () => {
 					</button>
 				</div>
 				<div className='flex absolute left-[400px] top-[100px] mt-8'>
-					<UserList data={users} setChangeUserType={setChangeUserType} />
+					<UserList
+						data={users}
+						setChangeUserType={setChangeUserType}
+						setUserId={setUserId}
+						setUserType={setUserType}
+					/>
 				</div>
 			</div>
 			{createUser && (
@@ -135,7 +142,11 @@ const UsersPage = () => {
 			)}
 			{changeUserType && (
 				<div className='absolute w-[500px] top-[300px] left-[600px]'>
-					<ChangeUserType setChangeUserType={setChangeUserType} />
+					<ChangeUserType
+						setChangeUserType={setChangeUserType}
+						userId={userId}
+						userType={userType}
+					/>
 				</div>
 			)}
 		</div>
