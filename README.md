@@ -39,7 +39,7 @@ _To Create a smart contract that enables the following:_
 > ## Live Demo
 
 https://voting-dapp-frontend.vercel.app/
-
+![HomePage](https://user-images.githubusercontent.com/19577206/164715300-ebcb6f86-8f46-4d28-8929-a15fc513bc9f.JPG)
 
 #
 > ## Technologies
