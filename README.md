@@ -45,9 +45,9 @@ https://voting-dapp-frontend.vercel.app/
 > ## Technologies
 | <b><u>Stack</u></b> | <b><u>Usage</u></b> |
 | :------------------ | :------------------ |
-|  **`React JS`**     |                     |
-|   **`Next js`**     |     Frontend        |
-|   **`Typescript`**  |                     |
+|  **`React JS`**     |      Frontend       |
+|   **`Next js`**     |      Frontend       |
+|   **`Typescript`**  |      Frontend       |
 |  **`Solidity`**     |   Smart contract    |
 
 
