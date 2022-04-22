@@ -27,6 +27,7 @@ const VoterCard = ({ contestant }: any) => {
 		contract,
 		address,
 		contestants,
+		fetchUsers,
 	} = votingContext;
 
 	useEffect(() => {
@@ -34,6 +35,18 @@ const VoterCard = ({ contestant }: any) => {
 			fetchUserImage();
 		}
 	}, [user1]);
+
+	//Fetch users
+	useEffect(() => {
+		let mounted = true;
+		if (mounted && address !== null && contract !== null) {
+			fetchUsers(contract, address);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [address, contract]);
 
 	const checkIfValidUser = async (contract: any, address: any) => {
 		try {
@@ -121,7 +134,7 @@ const VoterCard = ({ contestant }: any) => {
 				<button
 					className={`bg-[#4B60B0] mb-8 w-2/3 my-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900 ${
 						!isVotingEnabled ||
-						(user.hasVoted && 'pointer-events-none opacity-30')
+						(user && user.hasVoted && 'pointer-events-none opacity-30')
 					}`}
 					onClick={() => handleVote()}
 				>
