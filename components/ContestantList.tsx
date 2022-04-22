@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ContestantList = () => {
+const ContestantList = ({ data }: any) => {
 	return (
 		<div>
 			<table className='table-auto  w-[900px] bg-white rounded-lg'>
@@ -11,32 +11,22 @@ const ContestantList = () => {
 						<th>Number of Votes</th>
 					</tr>
 				</thead>
-				<tbody className=''>
-					<tr
-						className='border-b-2 h-16 hover:bg-gray-200 cursor-pointer'
-						key=''
-					>
-						<td className=''>1</td>
-						<td>Nkemjika Obi</td>
-						<td>23</td>
-					</tr>
-					<tr
-						className='border-b-2 h-16 hover:bg-gray-200 cursor-pointer'
-						key=''
-					>
-						<td className=''>2</td>
-						<td>Ebube Okoli</td>
-						<td>14</td>
-					</tr>
-					<tr
-						className='border-b-2 h-16 hover:bg-gray-200 cursor-pointer'
-						key=''
-					>
-						<td className=''>3</td>
-						<td>Uche Uzoachi</td>
-						<td>6</td>
-					</tr>
-				</tbody>
+				{data.length > 0 ? (
+					data.map((d: any, index: number) => (
+						<tbody className='' key={index}>
+							<tr
+								className='border-b-2 h-16 hover:bg-gray-200 cursor-pointer'
+								key=''
+							>
+								<td className=''>{d.id}</td>
+								<td>{d.name}</td>
+								<td>{d.numberOfVotes}</td>
+							</tr>
+						</tbody>
+					))
+				) : (
+					<div className='my-4 ml-4'>No contestants yet...</div>
+				)}
 			</table>
 		</div>
 	);

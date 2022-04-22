@@ -132,7 +132,7 @@ const AdminPage: NextPage = () => {
 				toast.success('Voting disabled');
 				setLoading1(false);
 			} catch (error) {
-				toast.error('An error occurred');
+				toast.error((error as Error).message);
 				setLoading1(false);
 			}
 		} else {
@@ -142,7 +142,7 @@ const AdminPage: NextPage = () => {
 				toast.success('Voting enabled');
 				setLoading1(false);
 			} catch (error) {
-				toast.error('An error occurred');
+				toast.error((error as Error).message);
 				setLoading1(false);
 			}
 		}
@@ -156,7 +156,7 @@ const AdminPage: NextPage = () => {
 				toast.success('Votes are now hidden');
 				setLoading2(false);
 			} catch (error) {
-				toast.error('An error occurred');
+				toast.error((error as Error).message);
 				setLoading2(false);
 			}
 		} else {
@@ -166,7 +166,7 @@ const AdminPage: NextPage = () => {
 				toast.success('Votes are now visible');
 				setLoading2(false);
 			} catch (error) {
-				toast.error('An error occurred');
+				toast.error((error as Error).message);
 				setLoading2(false);
 			}
 		}

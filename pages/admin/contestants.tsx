@@ -23,6 +23,9 @@ const ContestantPage = () => {
 		address,
 		web3Modal,
 		disconnectWallet,
+		contestants,
+		contract,
+		fetchContestants,
 	} = votingContext;
 	const router = useRouter();
 	const reconnectWallet = async () => {
@@ -69,6 +72,19 @@ const ContestantPage = () => {
 		};
 		//eslint-disable-next-line
 	}, [error]);
+
+	//Fetch contestants
+	useEffect(() => {
+		let mounted = true;
+		if (mounted && address !== null && contract !== null) {
+			fetchContestants(contract);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [address, contract]);
+
 	return (
 		<div>
 			<Head>
@@ -100,7 +116,7 @@ const ContestantPage = () => {
 					Contestants
 				</h3>
 				<div className='flex absolute left-[400px] top-[100px] mt-8'>
-					<ContestantList />
+					<ContestantList data={contestants} />
 				</div>
 				<div className='absolute left-[400px] top-[500px]'>
 					<button

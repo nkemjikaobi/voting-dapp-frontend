@@ -12,6 +12,9 @@ import {
 	FETCH_USERS,
 	IS_VOTING_ENABLED,
 	IS_VOTING_VISIBLE,
+	CREATE_USER,
+	CREATE_CONTESTANT,
+	CHANGE_USER_TYPE,
 } from '../types';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
@@ -187,6 +190,60 @@ const VotingState = (props: any) => {
 		}
 	};
 
+	const createUser = async (
+		contract: any,
+		address: string,
+		userAddress: any,
+		userType: any
+	) => {
+		try {
+			await contract.methods.createUser(userAddress, userType).send({
+				from: address,
+			});
+			await fetchUsers(contract, address);
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+	const createContestant = async (
+		contract: any,
+		address: string,
+		name: string
+	) => {
+		try {
+			await contract.methods.createContestant(name).send({
+				from: address,
+			});
+			await fetchContestants(contract);
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+	const changeUserType = async (
+		contract: any,
+		address: string,
+		userId: any,
+		userType: any
+	) => {
+		try {
+			await contract.methods.changeUserType(userId, userType).send({
+				from: address,
+			});
+			await fetchUsers(contract, address);
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
 	//is vote visible
 	const isVoteVisble = async (contract: any) => {
 		try {
@@ -336,6 +393,9 @@ const VotingState = (props: any) => {
 				disableVoting,
 				hideVotes,
 				showVotes,
+				changeUserType,
+				createContestant,
+				createUser,
 			}}
 		>
 			{props.children}
