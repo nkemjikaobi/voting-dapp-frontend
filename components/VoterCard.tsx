@@ -126,7 +126,7 @@ const VoterCard = ({ contestant }: any) => {
 					You can vote.
 				</p>
 			)}
-			{winnerId === contestant.id ? (
+			{/* {winnerId === contestant.id ? (
 				<button className='bg-green-500 mb-8 w-2/3 my-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'>
 					winner
 				</button>
@@ -147,7 +147,23 @@ const VoterCard = ({ contestant }: any) => {
 						<>vote</>
 					)}
 				</button>
-			)}
+			)} */}
+			<button
+				className={`bg-[#4B60B0] mb-8 w-2/3 my-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900 ${
+					!isVotingEnabled ||
+					(user && user.hasVoted && 'pointer-events-none opacity-30')
+				}`}
+				onClick={() => handleVote()}
+			>
+				{loading ? (
+					<>
+						<FaSpinner className='animate-spin h-5 w-5 mr-3' />
+						casting vote
+					</>
+				) : (
+					<>vote</>
+				)}
+			</button>
 		</div>
 	);
 };
