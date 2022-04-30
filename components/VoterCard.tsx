@@ -80,6 +80,7 @@ const VoterCard = ({ contestant }: any) => {
 				return prev.numberOfVotes > current.numberOfVotes ? prev : current;
 			});
 		setWinnerId(max.id);
+		console.log(max.id)
 	};
 
 	useEffect(() => {
@@ -126,7 +127,7 @@ const VoterCard = ({ contestant }: any) => {
 					You can vote.
 				</p>
 			)}
-			{/* {winnerId === contestant.id ? (
+			{isVotingEnded && winnerId === contestant.id ? (
 				<button className='bg-green-500 mb-8 w-2/3 my-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900'>
 					winner
 				</button>
@@ -147,8 +148,8 @@ const VoterCard = ({ contestant }: any) => {
 						<>vote</>
 					)}
 				</button>
-			)} */}
-			<button
+			)}
+			{/* <button
 				className={`bg-[#4B60B0] mb-8 w-2/3 my-4 flex items-center justify-center text-white rounded-md uppercase px-5 py-3 hover:bg-slate-900 ${
 					!isVotingEnabled ||
 					(user && user.hasVoted && 'pointer-events-none opacity-30')
@@ -163,7 +164,7 @@ const VoterCard = ({ contestant }: any) => {
 				) : (
 					<>vote</>
 				)}
-			</button>
+			</button> */}
 		</div>
 	);
 };
